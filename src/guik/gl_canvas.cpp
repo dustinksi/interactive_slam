@@ -11,6 +11,8 @@
 #include <glk/glsl_shader.hpp>
 #include <glk/frame_buffer.hpp>
 #include <glk/texture_renderer.hpp>
+#include <glk/effects/plain_rendering.hpp>
+#include <glk/effects/screen_space_ambient_occlusion.hpp>
 
 #include <guik/camera_control.hpp>
 
@@ -25,7 +27,7 @@ namespace guik {
  * @param data_directory
  * @param size
  */
-GLCanvas::GLCanvas(const std::string& data_directory, const Eigen::Vector2i& size) : size(size), point_size(50.0f), min_z(-1.5f), max_z(5.0f), z_clipping(true) {
+GLCanvas::GLCanvas(const std::string& data_directory, const Eigen::Vector2i& size) : data_directory(data_directory), size(size), point_size(50.0f), min_z(-1.5f), max_z(5.0f), ssao(false), z_clipping(true) {
   frame_buffer.reset(new glk::FrameBuffer(size));
   frame_buffer->add_color_buffer(GL_RGBA32I, GL_RGBA_INTEGER, GL_INT);
 
@@ -113,7 +115,7 @@ void GLCanvas::unbind() {
  * @brief
  *
  */
-void GLCanvas::render_to_screen(int color_buffer_id) { texture_renderer->draw(frame_buffer->color(color_buffer_id).id()); }
+void GLCanvas::render_to_screen(int color_buffer_id) { texture_renderer->draw(frame_buffer->color(color_buffer_id), frame_buffer->depth()); }
 
 /**
  * @brief
@@ -239,6 +241,15 @@ void GLCanvas::draw_ui() {
   ImGui::DragFloat("point_size", &point_size, 10.0f);
   ImGui::DragFloat("min_z", &min_z, 0.1f);
   ImGui::DragFloat("max_z", &max_z, 0.1f);
+  if(ImGui::Checkbox("ssao", &ssao)) {
+    if(ssao) {
+      texture_renderer->set_effect(std::make_shared<glk::ScreenSpaceAmbientOcclusion>(data_directory));
+    } else {
+      texture_renderer->set_effect(std::make_shared<glk::PlainRendering>(data_directory));
+    }
+  }
+
+  ImGui::SameLine();
   ImGui::Checkbox("z_clipping", &z_clipping);
   ImGui::End();
 

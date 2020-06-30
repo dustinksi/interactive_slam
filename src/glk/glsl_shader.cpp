@@ -14,8 +14,12 @@
 namespace glk {
 
 bool GLSLShader::init(const std::string& shader_path) {
-  GLuint vertex_shader = read_shader_from_file(shader_path + ".vert", GL_VERTEX_SHADER);
-  GLuint fragment_shader = read_shader_from_file(shader_path + ".frag", GL_FRAGMENT_SHADER);
+  return init(shader_path + ".vert", shader_path + ".frag");
+}
+
+bool GLSLShader::init(const std::string& vertex_shader_path, const std::string& fragment_shader_path) {
+  GLuint vertex_shader = read_shader_from_file(vertex_shader_path, GL_VERTEX_SHADER);
+  GLuint fragment_shader = read_shader_from_file(fragment_shader_path, GL_FRAGMENT_SHADER);
 
   shader_program = glCreateProgram();
   glAttachShader(shader_program, vertex_shader);
@@ -41,6 +45,7 @@ bool GLSLShader::init(const std::string& shader_path) {
 
   return true;
 }
+
 
 GLint GLSLShader::attrib(const std::string& name) {
   auto found = attrib_cache.find(name);

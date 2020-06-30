@@ -88,6 +88,7 @@ add_library(guik STATIC
   src/glk/colormap.cpp
   src/glk/glsl_shader.cpp
   src/glk/frame_buffer.cpp
+  src/glk/texture_renderer.cpp
   src/glk/pointcloud_buffer.cpp
   src/glk/primitives/primitives.cpp
   src/glk/loaders/ply_loader.cpp

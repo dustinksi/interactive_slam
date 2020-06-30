@@ -48,9 +48,13 @@ public:
   std::unique_ptr<guik::ProjectionControl> projection_control;
 
 private:
+  const std::string data_directory;
+
   float point_size;
   float min_z;
   float max_z;
+
+  bool ssao;
   bool z_clipping;
 };
 

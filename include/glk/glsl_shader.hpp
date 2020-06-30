@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 #include <unordered_map>
 
 #include <GL/gl3w.h>
@@ -25,6 +26,21 @@ public:
    * @return             if the shader is successfully loaded
    */
   bool init(const std::string& shader_path);
+
+  /**
+   * @brief load GLSL shader from files
+   *
+   * @param vertex_shader_path
+   * @param fragment_shader_path
+   * @return             if the shader is successfully loaded
+   */
+  bool init(const std::string& vertex_shader_path, const std::string& fragment_shader_path);
+
+  /**
+   * @brief shader program ID
+   * return shader program ID
+   */
+  GLuint id() const { return shader_program; }
 
   /**
    * @brief bind the shader
@@ -55,8 +71,12 @@ public:
   void set_uniform(const std::string& name, const Eigen::Vector2f& vector) { glUniform2fv(uniform(name), 1, vector.data()); }
   void set_uniform(const std::string& name, const Eigen::Vector3f& vector) { glUniform3fv(uniform(name), 1, vector.data()); }
   void set_uniform(const std::string& name, const Eigen::Vector4f& vector) { glUniform4fv(uniform(name), 1, vector.data()); }
+  void set_uniform(const std::string& name, const Eigen::Vector2i& vector) { glUniform4iv(uniform(name), 1, vector.data()); }
+  void set_uniform(const std::string& name, const Eigen::Vector3i& vector) { glUniform3iv(uniform(name), 1, vector.data()); }
   void set_uniform(const std::string& name, const Eigen::Vector4i& vector) { glUniform4iv(uniform(name), 1, vector.data()); }
   void set_uniform(const std::string& name, const Eigen::Matrix4f& matrix) { glUniformMatrix4fv(uniform(name), 1, GL_FALSE, matrix.data()); }
+
+  void set_uniform(const std::string& name, const std::vector<Eigen::Vector3f, Eigen::aligned_allocator<Eigen::Vector3f>>& vectors) { glUniform3fv(uniform(name), vectors.size(), vectors[0].data()); }
 
 private:
   GLuint read_shader_from_file(const std::string& filename, GLuint shader_type);
