@@ -10,12 +10,10 @@ RUN /bin/bash -c '. /opt/ros/melodic/setup.bash; catkin_init_workspace'
 RUN git clone https://github.com/koide3/ndt_omp.git
 RUN git clone https://github.com/koide3/hdl_graph_slam.git
 
-# RUN git clone https://github.com/koide3/interactive_slam.git --recursive
-COPY . /root/catkin_ws/src/interactive_slam/
-WORKDIR /root/catkin_ws/src/interactive_slam
-RUN git submodule init
-RUN git submodule update
-
+RUN git clone https://github.com/koide3/interactive_slam.git --recursive
+# COPY . /root/catkin_ws/src/interactive_slam/
+# WORKDIR /root/catkin_ws/src/interactive_slam
+# RUN git init && git submodule init && git submodule update
 
 WORKDIR /root/catkin_ws
 RUN /bin/bash -c '. /opt/ros/melodic/setup.bash; catkin_make'
